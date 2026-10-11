@@ -69,6 +69,8 @@ var (
 		enableJSONLogging bool
 		// memoryProfileThreshold is the threshold of memory usage in bytes to trigger a memory profile.
 		memoryProfileThreshold uint64
+		// localAuditLogRetentionDays is how long local_audit_log rows are kept; 0 keeps them forever.
+		localAuditLogRetentionDays int
 	}
 
 	rootCmd = &cobra.Command{
@@ -110,6 +112,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&flags.metricsRemoteAccess, "metrics-remote-access", false, "allow remote clients to access /metrics; enable only when protected by a gateway, firewall, or NetworkPolicy")
 	rootCmd.PersistentFlags().BoolVar(&flags.debug, "debug", false, "enable debug level log")
 	rootCmd.PersistentFlags().BoolVar(&flags.enableJSONLogging, "enable-json-logging", false, "enable output logs in bytebase in json format")
+	rootCmd.PersistentFlags().IntVar(&flags.localAuditLogRetentionDays, "local-audit-log-retention-days", 90, "days to keep rows of the local audit log; 0 keeps them forever")
 	rootCmd.PersistentFlags().Uint64Var(&flags.memoryProfileThreshold, "memory-profile-threshold", 0, "the threshold of memory usage in bytes to trigger a memory profile")
 }
 

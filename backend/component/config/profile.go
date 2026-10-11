@@ -34,6 +34,8 @@ type Profile struct {
 	HA bool
 	// Enable debug level. Only works when SaaS is true.
 	Debug bool
+	// LocalAuditLogRetentionDays is how long local_audit_log rows are kept. 0 keeps them forever.
+	LocalAuditLogRetentionDays int
 
 	// Version is the bytebase's server version
 	Version string

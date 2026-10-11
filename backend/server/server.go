@@ -250,7 +250,7 @@ func NewServer(ctx context.Context, profile *config.Profile) (*Server, error) {
 	s.notifyListener = notifylistener.NewListener(stores.GetDB(), s.bus)
 
 	// Data cleaner
-	s.dataCleaner = cleaner.NewDataCleaner(stores, s.licenseService)
+	s.dataCleaner = cleaner.NewDataCleaner(stores, s.licenseService, time.Duration(profile.LocalAuditLogRetentionDays)*24*time.Hour)
 
 	// Heartbeat runner
 	s.heartbeatRunner = heartbeat.NewRunner(stores, profile)

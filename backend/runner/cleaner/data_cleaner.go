@@ -23,19 +23,28 @@ const (
 	// TestLoginAttemptRetentionOutlivesLockouts can assert the coupling; the
 	// longest window today is ten minutes, so rows idle for an hour are dead.
 	LoginAttemptRetentionPeriod = 1 * time.Hour
+
+	// localAuditLogDeleteBatch bounds one delete statement; localAuditLogMaxBatches
+	// bounds one cleanup pass, so a large backlog drains over several passes
+	// instead of holding the cleaner.
+	localAuditLogDeleteBatch = 5000
+	localAuditLogMaxBatches  = 100
 )
 
 // DataCleaner periodically cleans up expired data from the database.
 type DataCleaner struct {
 	store          *store.Store
 	licenseService *enterprise.LicenseService
+	// localAuditLogRetention is how long local_audit_log rows are kept; 0 keeps them forever.
+	localAuditLogRetention time.Duration
 }
 
 // NewDataCleaner creates a new DataCleaner.
-func NewDataCleaner(store *store.Store, licenseService *enterprise.LicenseService) *DataCleaner {
+func NewDataCleaner(store *store.Store, licenseService *enterprise.LicenseService, localAuditLogRetention time.Duration) *DataCleaner {
 	return &DataCleaner{
-		store:          store,
-		licenseService: licenseService,
+		store:                  store,
+		licenseService:         licenseService,
+		localAuditLogRetention: localAuditLogRetention,
 	}
 }
 
@@ -88,6 +97,29 @@ func (c *DataCleaner) cleanup(ctx context.Context) {
 	c.cleanupLoginAttempts(ctx)
 	c.cleanupStaleHeartbeats(ctx)
 	c.cleanupExpiredVCSProviderUsers(ctx)
+	c.cleanupLocalAuditLogs(ctx)
+}
+
+func (c *DataCleaner) cleanupLocalAuditLogs(ctx context.Context) {
+	if c.localAuditLogRetention <= 0 {
+		return
+	}
+	cutoff := time.Now().Add(-c.localAuditLogRetention)
+	var total int64
+	for range localAuditLogMaxBatches {
+		n, err := c.store.DeleteLocalAuditLogsBefore(ctx, cutoff, localAuditLogDeleteBatch)
+		if err != nil {
+			slog.Error("Failed to clean up local audit logs", log.BBError(err))
+			break
+		}
+		total += n
+		if n < localAuditLogDeleteBatch {
+			break
+		}
+	}
+	if total > 0 {
+		slog.Info("Cleaned up local audit logs", slog.Int64("count", total))
+	}
 }
 
 func (c *DataCleaner) detectStaleTaskRuns(ctx context.Context) {

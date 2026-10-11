@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 
 	"github.com/bytebase/bytebase/backend/component/config"
 )
@@ -18,6 +19,7 @@ func getBaseProfile(dataDir string) *config.Profile {
 		SaaS:                       flags.saas,
 		MetricsRemoteAccess:        flags.metricsRemoteAccess,
 		Debug:                      flags.debug,
+		LocalAuditLogRetentionDays: flags.localAuditLogRetentionDays,
 		IsDocker:                   isDocker(),
 		DataDir:                    dataDir,
 		Version:                    version,
@@ -38,6 +40,9 @@ func getBaseProfile(dataDir string) *config.Profile {
 func resolveProfile() (*config.Profile, error) {
 	if err := checkDataDir(); err != nil {
 		return nil, err
+	}
+	if flags.localAuditLogRetentionDays < 0 {
+		return nil, errors.Errorf("--local-audit-log-retention-days must not be negative, got %d", flags.localAuditLogRetentionDays)
 	}
 	return activeProfile(flags.dataDir), nil
 }
