@@ -271,7 +271,8 @@ func NewServer(ctx context.Context, profile *config.Profile) (*Server, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MCP server")
 	}
-	configureEchoRouters(s.echoServer, s.lspServer, directorySyncServer, oauth2Service, mcpServer, stripeWebhookHandler, productMetrics, profile)
+	localSSO := newLocalSSO(s.store, secret, s.licenseService, profile, s.iamManager)
+	configureEchoRouters(s.echoServer, s.lspServer, localSSO, directorySyncServer, oauth2Service, mcpServer, stripeWebhookHandler, productMetrics, profile)
 
 	serverStarted = true
 	return s, nil

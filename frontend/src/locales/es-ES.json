@@ -1608,6 +1608,17 @@
       "visit-prjects": "Visitar Proyectos"
     }
   },
+  "local-sso": {
+    "continue": "Continuar con {{title}}",
+    "error": {
+      "denied": "Se denegó el inicio de sesión.",
+      "failed": "No se pudo completar el inicio de sesión. Revise el registro del servidor.",
+      "not_registered": "Ningún usuario de Bytebase tiene este correo. Pida a un administrador que lo añada.",
+      "state": "La sesión de inicio expiró. Inténtelo de nuevo.",
+      "unverified": "El correo no está verificado en el proveedor de identidad."
+    },
+    "failed": "No se pudo iniciar sesión con {{title}}."
+  },
   "masking": {
     "reason": {
       "algorithm": "Método de enmascaramiento",

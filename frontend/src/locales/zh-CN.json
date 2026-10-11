@@ -1608,6 +1608,17 @@
       "visit-prjects": "访问项目"
     }
   },
+  "local-sso": {
+    "continue": "使用 {{title}} 继续",
+    "error": {
+      "denied": "登录被拒绝。",
+      "failed": "无法完成登录。请查看服务器日志。",
+      "not_registered": "没有使用此邮箱的 Bytebase 用户。请联系管理员添加。",
+      "state": "登录会话已过期，请重试。",
+      "unverified": "该邮箱未在身份提供商处验证。"
+    },
+    "failed": "无法使用 {{title}} 登录。"
+  },
   "masking": {
     "reason": {
       "algorithm": "遮盖方法",

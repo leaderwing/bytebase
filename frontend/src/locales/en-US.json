@@ -1608,6 +1608,17 @@
       "visit-prjects": "Visit Projects"
     }
   },
+  "local-sso": {
+    "continue": "Continue with {{title}}",
+    "error": {
+      "denied": "The sign-in was denied.",
+      "failed": "The sign-in could not be completed. Check the server log.",
+      "not_registered": "No Bytebase user has this email. Ask an administrator to add you.",
+      "state": "The sign-in session expired. Try again.",
+      "unverified": "The email is not verified at the identity provider."
+    },
+    "failed": "Couldn't sign in with {{title}}."
+  },
   "masking": {
     "reason": {
       "algorithm": "Masking method",

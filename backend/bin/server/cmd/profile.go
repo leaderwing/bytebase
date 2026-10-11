@@ -5,19 +5,28 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 
 	"github.com/bytebase/bytebase/backend/component/config"
 )
 
 func getBaseProfile(dataDir string) *config.Profile {
 	config := &config.Profile{
-		ExternalURL:                flags.externalURL,
-		Port:                       flags.port,     // Using flags.port as our gRPC server port.
-		DatastorePort:              flags.port + 2, // Using flags.port + 2 as our datastore port.
-		HA:                         flags.ha,
-		SaaS:                       flags.saas,
-		MetricsRemoteAccess:        flags.metricsRemoteAccess,
-		Debug:                      flags.debug,
+		ExternalURL:         flags.externalURL,
+		Port:                flags.port,     // Using flags.port as our gRPC server port.
+		DatastorePort:       flags.port + 2, // Using flags.port + 2 as our datastore port.
+		HA:                  flags.ha,
+		SaaS:                flags.saas,
+		MetricsRemoteAccess: flags.metricsRemoteAccess,
+		Debug:               flags.debug,
+		LocalSSO: config.LocalSSOConfig{
+			Issuer:        flags.localSSOIssuer,
+			ClientID:      flags.localSSOClientID,
+			ClientSecret:  os.Getenv("LOCAL_SSO_CLIENT_SECRET"),
+			Title:         flags.localSSOTitle,
+			AutoCreate:    flags.localSSOAutoCreate,
+			SkipTLSVerify: flags.localSSOSkipTLSVerify,
+		},
 		IsDocker:                   isDocker(),
 		DataDir:                    dataDir,
 		Version:                    version,
@@ -39,7 +48,11 @@ func resolveProfile() (*config.Profile, error) {
 	if err := checkDataDir(); err != nil {
 		return nil, err
 	}
-	return activeProfile(flags.dataDir), nil
+	profile := activeProfile(flags.dataDir)
+	if profile.LocalSSO.Enabled() && (profile.LocalSSO.ClientID == "" || profile.LocalSSO.ClientSecret == "") {
+		return nil, errors.New("--local-sso-issuer requires --local-sso-client-id and the LOCAL_SSO_CLIENT_SECRET environment variable")
+	}
+	return profile, nil
 }
 
 func isDocker() bool {
