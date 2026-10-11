@@ -15,6 +15,7 @@ import (
 	"github.com/pkg/errors"
 
 	directorysync "github.com/bytebase/bytebase/backend/api/directory-sync"
+	"github.com/bytebase/bytebase/backend/api/localaudit"
 	"github.com/bytebase/bytebase/backend/api/lsp"
 	"github.com/bytebase/bytebase/backend/api/mcp"
 	"github.com/bytebase/bytebase/backend/api/oauth2"
@@ -83,6 +84,7 @@ type Server struct {
 	echoServer *echo.Echo
 	httpServer *http.Server
 	lspServer  *lsp.Server
+	localAudit *localaudit.Service
 	store      *store.Store
 	dbFactory  *dbfactory.DBFactory
 	startedTS  int64
@@ -257,6 +259,7 @@ func NewServer(ctx context.Context, profile *config.Profile) (*Server, error) {
 
 	// LSP server.
 	s.lspServer = lsp.NewServer(s.store, profile, secret, s.bus, s.iamManager, s.licenseService)
+	s.localAudit = localaudit.NewService(s.store, secret, s.licenseService, s.bus, profile)
 
 	directorySyncServer := directorysync.NewService(s.store, s.licenseService, s.iamManager, profile)
 	oauth2Service := oauth2.NewService(stores, profile, secret)
@@ -271,7 +274,7 @@ func NewServer(ctx context.Context, profile *config.Profile) (*Server, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create MCP server")
 	}
-	configureEchoRouters(s.echoServer, s.lspServer, directorySyncServer, oauth2Service, mcpServer, stripeWebhookHandler, productMetrics, profile)
+	configureEchoRouters(s.echoServer, s.lspServer, s.localAudit, directorySyncServer, oauth2Service, mcpServer, stripeWebhookHandler, productMetrics, profile)
 
 	serverStarted = true
 	return s, nil

@@ -14,6 +14,7 @@ import (
 	connectcors "connectrpc.com/cors"
 
 	directorysync "github.com/bytebase/bytebase/backend/api/directory-sync"
+	"github.com/bytebase/bytebase/backend/api/localaudit"
 	"github.com/bytebase/bytebase/backend/api/lsp"
 	"github.com/bytebase/bytebase/backend/api/mcp"
 	"github.com/bytebase/bytebase/backend/api/oauth2"
@@ -28,6 +29,7 @@ import (
 func configureEchoRouters(
 	e *echo.Echo,
 	lspServer *lsp.Server,
+	localAudit *localaudit.Service,
 	directorySyncServer *directorysync.Service,
 	oauth2Service *oauth2.Service,
 	mcpServer *mcp.Server,
@@ -72,6 +74,9 @@ func configureEchoRouters(
 
 	// LSP server.
 	e.GET(lspAPI, lspServer.Router)
+
+	// Local audit log, read-only, workspace admins only.
+	localAudit.RegisterRoutes(e)
 
 	hookGroup := e.Group(webhookAPIPrefix)
 	scimGroup := hookGroup.Group(scimAPIPrefix)
