@@ -1,5 +1,5 @@
 import { Download, X } from "lucide-react";
-import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HumanizeTs } from "@/components/HumanizeTs";
 import { Alert } from "@/components/ui/alert";
@@ -150,7 +150,7 @@ export function LocalAuditLogPage() {
     void load(applied, 0);
   }, [applied, load]);
 
-  const onSearch = (e: FormEvent) => {
+  const onSearch = (e: SyntheticEvent) => {
     e.preventDefault();
     setApplied({ ...draft });
   };
