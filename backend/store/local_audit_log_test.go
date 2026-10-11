@@ -86,3 +86,38 @@ func testLocalAuditLog(t *testing.T, db *sql.DB, stores *store.Store) {
 		require.Len(t, logs, 3)
 	})
 }
+
+func TestLocalAuditLogMirror(t *testing.T) {
+	t.Parallel()
+	db, stores, _ := testcontainer.NewMetadataDB(t)
+	testLocalAuditLogMirror(t, db, stores)
+}
+
+func testLocalAuditLogMirror(t *testing.T, db *sql.DB, stores *store.Store) {
+	t.Helper()
+	ctx := context.Background()
+	_, err := db.ExecContext(ctx, `INSERT INTO workspace (resource_id) VALUES ('m1')`)
+	require.NoError(t, err)
+
+	t.Run("audit_log write is copied to local_audit_log", func(t *testing.T) {
+		require.NoError(t, stores.CreateAuditLog(ctx, "m1", &storepb.AuditLog{Method: "/bytebase.v1.SQLService/Query", User: "users/a@example.com"}))
+		logs, err := stores.SearchLocalAuditLogs(ctx, &store.LocalAuditLogFind{Workspace: "m1"})
+		require.NoError(t, err)
+		require.Len(t, logs, 1)
+		require.Equal(t, "/bytebase.v1.SQLService/Query", logs[0].Payload.Method)
+		require.Equal(t, "users/a@example.com", logs[0].Payload.User)
+	})
+
+	t.Run("a failing copy does not fail the audit_log write", func(t *testing.T) {
+		_, err := db.ExecContext(ctx, `ALTER TABLE local_audit_log RENAME TO local_audit_log_off`)
+		require.NoError(t, err)
+		defer func() {
+			_, err := db.ExecContext(ctx, `ALTER TABLE local_audit_log_off RENAME TO local_audit_log`)
+			require.NoError(t, err)
+		}()
+		require.NoError(t, stores.CreateAuditLog(ctx, "m1", &storepb.AuditLog{Method: "/bytebase.v1.IssueService/CreateIssue"}))
+		var n int
+		require.NoError(t, db.QueryRowContext(ctx, `SELECT count(*) FROM audit_log WHERE workspace = 'm1'`).Scan(&n))
+		require.Equal(t, 2, n)
+	})
+}

@@ -44,7 +44,9 @@ func (s *Store) CreateAuditLog(ctx context.Context, workspace string, payload *s
 		return errors.Wrapf(err, "failed to build sql")
 	}
 
-	if _, err := s.GetDB().ExecContext(ctx, sql, args...); err != nil {
+	_, err = s.GetDB().ExecContext(ctx, sql, args...)
+	s.mirrorToLocalAuditLog(ctx, workspace, p)
+	if err != nil {
 		return errors.Wrapf(err, "failed to create audit log")
 	}
 	return nil

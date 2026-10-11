@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/bytebase/bytebase/backend/common"
+	"github.com/bytebase/bytebase/backend/common/log"
 	storepb "github.com/bytebase/bytebase/backend/generated-go/store"
 	"github.com/bytebase/bytebase/backend/store/qb"
 )
@@ -123,4 +125,18 @@ func (s *Store) DeleteLocalAuditLogsBefore(ctx context.Context, cutoff time.Time
 		return 0, errors.Wrapf(err, "failed to read rows affected")
 	}
 	return n, nil
+}
+
+// mirrorToLocalAuditLog copies a row that CreateAuditLog just wrote into
+// local_audit_log. Every audit writer goes through CreateAuditLog, so one copy
+// here covers the interceptor, the out-of-band doors and the recovery CLI. It
+// is best effort: a failure here must not fail the write to audit_log.
+func (s *Store) mirrorToLocalAuditLog(ctx context.Context, workspace string, payload []byte) {
+	sql, args, err := qb.Q().Space("INSERT INTO local_audit_log (workspace, payload) VALUES (?, ?)", workspace, payload).ToSQL()
+	if err == nil {
+		_, err = s.GetDB().ExecContext(ctx, sql, args...)
+	}
+	if err != nil {
+		slog.Warn("failed to mirror audit log to local_audit_log", slog.String("workspace", workspace), log.BBError(err))
+	}
 }
