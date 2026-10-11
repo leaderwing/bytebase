@@ -15,6 +15,7 @@ import (
 
 	directorysync "github.com/bytebase/bytebase/backend/api/directory-sync"
 	"github.com/bytebase/bytebase/backend/api/localaudit"
+	"github.com/bytebase/bytebase/backend/api/localsso"
 	"github.com/bytebase/bytebase/backend/api/lsp"
 	"github.com/bytebase/bytebase/backend/api/mcp"
 	"github.com/bytebase/bytebase/backend/api/oauth2"
@@ -30,6 +31,7 @@ func configureEchoRouters(
 	e *echo.Echo,
 	lspServer *lsp.Server,
 	localAudit *localaudit.Service,
+	localSSO *localsso.Service,
 	directorySyncServer *directorysync.Service,
 	oauth2Service *oauth2.Service,
 	mcpServer *mcp.Server,
@@ -91,6 +93,7 @@ func configureEchoRouters(
 
 	// OAuth2 server.
 	oauth2Service.RegisterRoutes(e)
+	localSSO.RegisterRoutes(e)
 
 	// MCP server.
 	mcpServer.RegisterRoutes(e)

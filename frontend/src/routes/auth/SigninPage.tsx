@@ -23,6 +23,7 @@ import type {
 } from "@/types/proto-es/v1/auth_service_pb";
 import { IdentityProviderType } from "@/types/proto-es/v1/idp_service_pb";
 import { openWindowForSSO } from "@/utils";
+import { LocalSSOButton } from "./LocalSSOButton";
 
 export type SigninPageProps = {
   readonly redirect?: boolean;
@@ -334,6 +335,8 @@ export function SigninPage(props: SigninPageProps) {
             )}
           </Alert>
         )}
+
+        <LocalSSOButton />
 
         {separatedIdps.length > 0 && (
           <div className="flex flex-col gap-y-2">

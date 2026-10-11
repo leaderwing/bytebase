@@ -71,6 +71,12 @@ var (
 		memoryProfileThreshold uint64
 		// localAuditLogRetentionDays is how long local_audit_log rows are kept; 0 keeps them forever.
 		localAuditLogRetentionDays int
+		// localSSO* configure the dev/test OIDC login; the client secret comes from LOCAL_SSO_CLIENT_SECRET.
+		localSSOIssuer        string
+		localSSOClientID      string
+		localSSOTitle         string
+		localSSOAutoCreate    bool
+		localSSOSkipTLSVerify bool
 	}
 
 	rootCmd = &cobra.Command{
@@ -113,6 +119,11 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&flags.debug, "debug", false, "enable debug level log")
 	rootCmd.PersistentFlags().BoolVar(&flags.enableJSONLogging, "enable-json-logging", false, "enable output logs in bytebase in json format")
 	rootCmd.PersistentFlags().IntVar(&flags.localAuditLogRetentionDays, "local-audit-log-retention-days", 90, "days to keep rows of the local audit log; 0 keeps them forever")
+	rootCmd.PersistentFlags().StringVar(&flags.localSSOIssuer, "local-sso-issuer", "", "dev/test only: OIDC issuer URL (for example a Keycloak realm) that enables the local SSO login; the client secret is read from LOCAL_SSO_CLIENT_SECRET")
+	rootCmd.PersistentFlags().StringVar(&flags.localSSOClientID, "local-sso-client-id", "", "dev/test only: OIDC client id for the local SSO login")
+	rootCmd.PersistentFlags().StringVar(&flags.localSSOTitle, "local-sso-title", "SSO", "label of the local SSO login button")
+	rootCmd.PersistentFlags().BoolVar(&flags.localSSOAutoCreate, "local-sso-auto-create", false, "create a user on first local SSO login instead of rejecting unknown emails")
+	rootCmd.PersistentFlags().BoolVar(&flags.localSSOSkipTLSVerify, "local-sso-skip-tls-verify", false, "skip TLS verification of the local SSO issuer; dev/test only")
 	rootCmd.PersistentFlags().Uint64Var(&flags.memoryProfileThreshold, "memory-profile-threshold", 0, "the threshold of memory usage in bytes to trigger a memory profile")
 }
 

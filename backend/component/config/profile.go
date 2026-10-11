@@ -37,6 +37,9 @@ type Profile struct {
 	// LocalAuditLogRetentionDays is how long local_audit_log rows are kept. 0 keeps them forever.
 	LocalAuditLogRetentionDays int
 
+	// LocalSSO configures the dev/test OIDC login. Zero value means disabled.
+	LocalSSO LocalSSOConfig
+
 	// Version is the bytebase's server version
 	Version string
 	// Git commit hash of the build
@@ -76,4 +79,22 @@ var saasFeatureControlMap = map[string]bool{}
 // IsFeatureUnavailable returns if the feature is unavailable in SaaS mode.
 func (prof *Profile) IsFeatureUnavailable(feature string) bool {
 	return prof.SaaS && saasFeatureControlMap[feature]
+}
+
+// LocalSSOConfig configures the dev/test OIDC single sign-on login.
+type LocalSSOConfig struct {
+	// Issuer is the OIDC issuer URL, e.g. http://localhost:8180/realms/bytebase. Empty disables SSO.
+	Issuer       string
+	ClientID     string
+	ClientSecret string
+	// Title is the label of the login button.
+	Title string
+	// AutoCreate creates a Bytebase user on first login instead of rejecting unknown emails.
+	AutoCreate    bool
+	SkipTLSVerify bool
+}
+
+// Enabled reports whether SSO is configured.
+func (c LocalSSOConfig) Enabled() bool {
+	return c.Issuer != ""
 }

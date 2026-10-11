@@ -20,6 +20,14 @@ func getBaseProfile(dataDir string) *config.Profile {
 		MetricsRemoteAccess:        flags.metricsRemoteAccess,
 		Debug:                      flags.debug,
 		LocalAuditLogRetentionDays: flags.localAuditLogRetentionDays,
+		LocalSSO: config.LocalSSOConfig{
+			Issuer:        flags.localSSOIssuer,
+			ClientID:      flags.localSSOClientID,
+			ClientSecret:  os.Getenv("LOCAL_SSO_CLIENT_SECRET"),
+			Title:         flags.localSSOTitle,
+			AutoCreate:    flags.localSSOAutoCreate,
+			SkipTLSVerify: flags.localSSOSkipTLSVerify,
+		},
 		IsDocker:                   isDocker(),
 		DataDir:                    dataDir,
 		Version:                    version,
@@ -44,7 +52,11 @@ func resolveProfile() (*config.Profile, error) {
 	if flags.localAuditLogRetentionDays < 0 {
 		return nil, errors.Errorf("--local-audit-log-retention-days must not be negative, got %d", flags.localAuditLogRetentionDays)
 	}
-	return activeProfile(flags.dataDir), nil
+	profile := activeProfile(flags.dataDir)
+	if profile.LocalSSO.Enabled() && (profile.LocalSSO.ClientID == "" || profile.LocalSSO.ClientSecret == "") {
+		return nil, errors.New("--local-sso-issuer requires --local-sso-client-id and the LOCAL_SSO_CLIENT_SECRET environment variable")
+	}
+	return profile, nil
 }
 
 func isDocker() bool {

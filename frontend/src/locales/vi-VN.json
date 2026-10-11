@@ -1641,6 +1641,17 @@
       "time": "Thời gian"
     }
   },
+  "local-sso": {
+    "continue": "Tiếp tục với {{title}}",
+    "error": {
+      "denied": "Đăng nhập bị từ chối.",
+      "failed": "Không hoàn tất được đăng nhập. Hãy xem log của server.",
+      "not_registered": "Chưa có người dùng Bytebase với email này. Hãy nhờ quản trị viên thêm bạn.",
+      "state": "Phiên đăng nhập đã hết hạn. Hãy thử lại.",
+      "unverified": "Email chưa được xác minh ở nhà cung cấp danh tính."
+    },
+    "failed": "Không thể đăng nhập bằng {{title}}."
+  },
   "masking": {
     "reason": {
       "algorithm": "Phương pháp che dữ liệu",
