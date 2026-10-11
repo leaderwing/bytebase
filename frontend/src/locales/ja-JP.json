@@ -1608,6 +1608,33 @@
       "visit-prjects": "プロジェクトを開く"
     }
   },
+  "local-audit-log": {
+    "error": {
+      "failed": "監査ログを読み込めませんでした。",
+      "forbidden": "監査ログを閲覧できるのはワークスペース管理者のみです。",
+      "unauthorized": "セッションの有効期限が切れました。再度サインインしてください。"
+    },
+    "filter": {
+      "actor": "ユーザー",
+      "actor-placeholder": "メールアドレス（例: user@example.com）",
+      "from": "開始",
+      "method": "メソッド",
+      "method-placeholder": "例: /bytebase.v1.SQLService/Query",
+      "to": "終了"
+    },
+    "status": {
+      "ok": "OK"
+    },
+    "table": {
+      "actor": "ユーザー",
+      "ip": "IPアドレス",
+      "level": "レベル",
+      "method": "メソッド",
+      "resource": "リソース",
+      "status": "ステータス",
+      "time": "時刻"
+    }
+  },
   "masking": {
     "reason": {
       "algorithm": "マスキング方法",

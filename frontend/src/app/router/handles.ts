@@ -18,6 +18,7 @@ export const WORKSPACE_ROUTE_SEMANTIC_TYPES = "workspace.semantic-types";
 export const WORKSPACE_ROUTE_DATA_CLASSIFICATION =
   "workspace.data-classification";
 export const WORKSPACE_ROUTE_AUDIT_LOG = "workspace.audit-log";
+export const WORKSPACE_ROUTE_LOCAL_AUDIT_LOG = "workspace.local-audit-log";
 export const WORKSPACE_ROUTE_USERS = "workspace.users";
 export const WORKSPACE_ROUTE_SERVICE_ACCOUNTS = "workspace.service-accounts";
 export const WORKSPACE_ROUTE_WORKLOAD_IDENTITIES =

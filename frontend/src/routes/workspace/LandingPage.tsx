@@ -29,7 +29,7 @@ import {
   PROJECT_V1_ROUTE_DASHBOARD,
   SETTING_ROUTE_WORKSPACE_GENERAL,
   SETTING_ROUTE_WORKSPACE_SUBSCRIPTION,
-  WORKSPACE_ROUTE_AUDIT_LOG,
+  WORKSPACE_ROUTE_LOCAL_AUDIT_LOG,
   WORKSPACE_ROUTE_CUSTOM_APPROVAL,
   WORKSPACE_ROUTE_DATA_CLASSIFICATION,
   WORKSPACE_ROUTE_GLOBAL_MASKING,
@@ -165,7 +165,7 @@ function useFullQuickLinkList(): QuickLinkDef[] {
         icon: Users,
       },
       {
-        id: WORKSPACE_ROUTE_AUDIT_LOG,
+        id: WORKSPACE_ROUTE_LOCAL_AUDIT_LOG,
         titleKey: "settings.sidebar.audit-log",
         icon: Users,
       },

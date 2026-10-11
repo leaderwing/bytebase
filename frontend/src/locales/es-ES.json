@@ -1608,6 +1608,33 @@
       "visit-prjects": "Visitar Proyectos"
     }
   },
+  "local-audit-log": {
+    "error": {
+      "failed": "No se pudieron cargar los registros de auditoría.",
+      "forbidden": "Solo los administradores del espacio de trabajo pueden leer el registro de auditoría.",
+      "unauthorized": "Tu sesión ha caducado. Vuelve a iniciar sesión."
+    },
+    "filter": {
+      "actor": "Usuario",
+      "actor-placeholder": "Correo, p. ej. user@example.com",
+      "from": "Desde",
+      "method": "Método",
+      "method-placeholder": "p. ej. /bytebase.v1.SQLService/Query",
+      "to": "Hasta"
+    },
+    "status": {
+      "ok": "OK"
+    },
+    "table": {
+      "actor": "Usuario",
+      "ip": "Dirección IP",
+      "level": "Nivel",
+      "method": "Método",
+      "resource": "Recurso",
+      "status": "Estado",
+      "time": "Hora"
+    }
+  },
   "masking": {
     "reason": {
       "algorithm": "Método de enmascaramiento",

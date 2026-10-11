@@ -1608,6 +1608,33 @@
       "visit-prjects": "访问项目"
     }
   },
+  "local-audit-log": {
+    "error": {
+      "failed": "无法加载审计日志。",
+      "forbidden": "只有工作空间管理员可以查看审计日志。",
+      "unauthorized": "会话已过期，请重新登录。"
+    },
+    "filter": {
+      "actor": "用户",
+      "actor-placeholder": "邮箱，例如 user@example.com",
+      "from": "开始时间",
+      "method": "方法",
+      "method-placeholder": "例如 /bytebase.v1.SQLService/Query",
+      "to": "结束时间"
+    },
+    "status": {
+      "ok": "OK"
+    },
+    "table": {
+      "actor": "用户",
+      "ip": "IP 地址",
+      "level": "级别",
+      "method": "方法",
+      "resource": "资源",
+      "status": "状态",
+      "time": "时间"
+    }
+  },
   "masking": {
     "reason": {
       "algorithm": "遮盖方法",

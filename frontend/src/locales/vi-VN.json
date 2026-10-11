@@ -1608,6 +1608,33 @@
       "visit-prjects": "Truy cập Dự án"
     }
   },
+  "local-audit-log": {
+    "error": {
+      "failed": "Không thể tải nhật ký kiểm toán.",
+      "forbidden": "Chỉ quản trị viên workspace mới được đọc nhật ký kiểm toán.",
+      "unauthorized": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."
+    },
+    "filter": {
+      "actor": "Người dùng",
+      "actor-placeholder": "Email, ví dụ user@example.com",
+      "from": "Từ",
+      "method": "Phương thức",
+      "method-placeholder": "ví dụ /bytebase.v1.SQLService/Query",
+      "to": "Đến"
+    },
+    "status": {
+      "ok": "OK"
+    },
+    "table": {
+      "actor": "Người dùng",
+      "ip": "Địa chỉ IP",
+      "level": "Mức độ",
+      "method": "Phương thức",
+      "resource": "Tài nguyên",
+      "status": "Trạng thái",
+      "time": "Thời gian"
+    }
+  },
   "masking": {
     "reason": {
       "algorithm": "Phương pháp che dữ liệu",

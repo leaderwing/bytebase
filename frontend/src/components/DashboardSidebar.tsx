@@ -23,7 +23,7 @@ import {
   SETTING_ROUTE_WORKSPACE_GENERAL,
   SETTING_ROUTE_WORKSPACE_SUBSCRIPTION,
   useCurrentRoute,
-  WORKSPACE_ROUTE_AUDIT_LOG,
+  WORKSPACE_ROUTE_LOCAL_AUDIT_LOG,
   WORKSPACE_ROUTE_CUSTOM_APPROVAL,
   WORKSPACE_ROUTE_DATA_CLASSIFICATION,
   WORKSPACE_ROUTE_GLOBAL_MASKING,
@@ -163,7 +163,7 @@ function useSidebarItems(): SidebarItem[] {
           },
           {
             title: t("settings.sidebar.audit-log"),
-            name: WORKSPACE_ROUTE_AUDIT_LOG,
+            name: WORKSPACE_ROUTE_LOCAL_AUDIT_LOG,
             type: "route",
           },
         ],

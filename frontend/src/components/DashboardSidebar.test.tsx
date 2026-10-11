@@ -134,6 +134,7 @@ vi.mock("@/app/router", () => ({
   SETTING_ROUTE_WORKSPACE_GENERAL: "setting.workspace.general",
   SETTING_ROUTE_WORKSPACE_SUBSCRIPTION: "setting.workspace.subscription",
   WORKSPACE_ROUTE_AUDIT_LOG: "workspace.audit-log",
+  WORKSPACE_ROUTE_LOCAL_AUDIT_LOG: "workspace.local-audit-log",
   WORKSPACE_ROUTE_CUSTOM_APPROVAL: "workspace.custom-approval",
   WORKSPACE_ROUTE_DATA_CLASSIFICATION: "workspace.data-classification",
   WORKSPACE_ROUTE_GLOBAL_MASKING: "workspace.global-masking",

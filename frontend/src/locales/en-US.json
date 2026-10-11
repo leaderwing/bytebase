@@ -1608,6 +1608,33 @@
       "visit-prjects": "Visit Projects"
     }
   },
+  "local-audit-log": {
+    "error": {
+      "failed": "Failed to load audit logs.",
+      "forbidden": "Only workspace admins can read the audit log.",
+      "unauthorized": "Your session has expired. Sign in again."
+    },
+    "filter": {
+      "actor": "User",
+      "actor-placeholder": "Email, e.g. user@example.com",
+      "from": "From",
+      "method": "Method",
+      "method-placeholder": "e.g. /bytebase.v1.SQLService/Query",
+      "to": "To"
+    },
+    "status": {
+      "ok": "OK"
+    },
+    "table": {
+      "actor": "User",
+      "ip": "IP address",
+      "level": "Level",
+      "method": "Method",
+      "resource": "Resource",
+      "status": "Status",
+      "time": "Time"
+    }
+  },
   "masking": {
     "reason": {
       "algorithm": "Masking method",

@@ -56,6 +56,7 @@ import {
   WORKSPACE_ROUTE_403,
   WORKSPACE_ROUTE_404,
   WORKSPACE_ROUTE_AUDIT_LOG,
+  WORKSPACE_ROUTE_LOCAL_AUDIT_LOG,
   WORKSPACE_ROUTE_CUSTOM_APPROVAL,
   WORKSPACE_ROUTE_DATA_CLASSIFICATION,
   WORKSPACE_ROUTE_GLOBAL_MASKING,
@@ -328,6 +329,17 @@ const workspaceLevelRoutes: RouteObject[] = [
         lazy: lazyPage(
           () => import("@/routes/workspace/AuditLogPage"),
           (m) => m.AuditLogPage
+        ),
+      },
+      {
+        path: "local-audit-log",
+        handle: {
+          name: WORKSPACE_ROUTE_LOCAL_AUDIT_LOG,
+          requiredPermissionList: (): Permission[] => ["bb.auditLogs.search"],
+        },
+        lazy: lazyPage(
+          () => import("@/routes/workspace/LocalAuditLogPage"),
+          (m) => m.LocalAuditLogPage
         ),
       },
       {
