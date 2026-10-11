@@ -1609,6 +1609,12 @@
     }
   },
   "local-audit-log": {
+    "download": {
+      "csv": "Download CSV",
+      "json": "Download JSON",
+      "preparing": "Preparing…",
+      "truncated": "Only the first {{count}} matching rows were downloaded. Narrow the filter to get the rest."
+    },
     "error": {
       "failed": "Failed to load audit logs.",
       "forbidden": "Only workspace admins can read the audit log.",

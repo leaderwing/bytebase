@@ -1609,6 +1609,12 @@
     }
   },
   "local-audit-log": {
+    "download": {
+      "csv": "Tải CSV",
+      "json": "Tải JSON",
+      "preparing": "Đang chuẩn bị…",
+      "truncated": "Chỉ tải {{count}} dòng khớp đầu tiên. Hãy thu hẹp bộ lọc để lấy phần còn lại."
+    },
     "error": {
       "failed": "Không thể tải nhật ký kiểm toán.",
       "forbidden": "Chỉ quản trị viên workspace mới được đọc nhật ký kiểm toán.",

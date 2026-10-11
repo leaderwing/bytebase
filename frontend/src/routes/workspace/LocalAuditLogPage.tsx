@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HumanizeTs } from "@/components/HumanizeTs";
@@ -19,6 +19,14 @@ import {
   WorkspacePageContent,
   WorkspacePageLayout,
 } from "@/components/WorkspacePageLayout";
+import {
+  EXPORT_MAX_ROWS,
+  EXPORT_PAGE_SIZE,
+  exportFileName,
+  saveTextFile,
+  toCsv,
+  toJson,
+} from "./localAuditLogExport";
 
 const ENDPOINT = "/api/local-audit-logs";
 const PAGE_SIZE = 50;
@@ -83,10 +91,11 @@ class LoadFailure extends Error {
 
 async function fetchPage(
   filters: Filters,
-  offset: number
+  offset: number,
+  limit = PAGE_SIZE
 ): Promise<SearchResponse> {
   const params = new URLSearchParams({
-    limit: String(PAGE_SIZE),
+    limit: String(limit),
     offset: String(offset),
   });
   const filter = buildFilter(filters);
@@ -111,6 +120,8 @@ export function LocalAuditLogPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<LoadError>();
   const [detail, setDetail] = useState<LocalAuditLogEntry>();
+  const [downloading, setDownloading] = useState(false);
+  const [truncated, setTruncated] = useState(false);
   // A newer search must win over a slower, older one.
   const requestId = useRef(0);
 
@@ -142,6 +153,44 @@ export function LocalAuditLogPage() {
   const onSearch = (e: FormEvent) => {
     e.preventDefault();
     setApplied({ ...draft });
+  };
+
+  // Downloads everything matching the applied filters, not just the rows on
+  // screen, by paging through the same endpoint.
+  const download = async (format: "csv" | "json") => {
+    setDownloading(true);
+    setTruncated(false);
+    setError(undefined);
+    try {
+      const all: LocalAuditLogEntry[] = [];
+      let offset: number | undefined = 0;
+      while (offset !== undefined && all.length < EXPORT_MAX_ROWS) {
+        const page: SearchResponse = await fetchPage(
+          applied,
+          offset,
+          EXPORT_PAGE_SIZE
+        );
+        all.push(...page.logs);
+        offset = page.nextOffset;
+      }
+      if (offset !== undefined) {
+        all.length = Math.min(all.length, EXPORT_MAX_ROWS);
+        setTruncated(true);
+      }
+      if (format === "csv") {
+        saveTextFile(toCsv(all), exportFileName("csv"), "text/csv;charset=utf-8");
+      } else {
+        saveTextFile(
+          toJson(all),
+          exportFileName("json"),
+          "application/json;charset=utf-8"
+        );
+      }
+    } catch (e) {
+      setError(e instanceof LoadFailure ? e.kind : "failed");
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const columnCount = 7;
@@ -204,7 +253,38 @@ export function LocalAuditLogPage() {
             >
               {t("common.reset")}
             </Button>
+            <div className="ml-auto flex items-center gap-x-2">
+              <Button
+                type="button"
+                appearance="secondary"
+                disabled={loading || downloading}
+                onClick={() => void download("csv")}
+              >
+                <Download className="size-4" />
+                {downloading
+                  ? t("local-audit-log.download.preparing")
+                  : t("local-audit-log.download.csv")}
+              </Button>
+              <Button
+                type="button"
+                appearance="secondary"
+                disabled={loading || downloading}
+                onClick={() => void download("json")}
+              >
+                <Download className="size-4" />
+                {t("local-audit-log.download.json")}
+              </Button>
+            </div>
           </form>
+
+          {truncated && (
+            <Alert
+              variant="warning"
+              description={t("local-audit-log.download.truncated", {
+                count: EXPORT_MAX_ROWS,
+              })}
+            />
+          )}
 
           {error && (
             <Alert

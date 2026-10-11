@@ -1609,6 +1609,12 @@
     }
   },
   "local-audit-log": {
+    "download": {
+      "csv": "下载 CSV",
+      "json": "下载 JSON",
+      "preparing": "准备中…",
+      "truncated": "仅下载了前 {{count}} 条匹配记录。请缩小筛选范围以获取其余记录。"
+    },
     "error": {
       "failed": "无法加载审计日志。",
       "forbidden": "只有工作空间管理员可以查看审计日志。",

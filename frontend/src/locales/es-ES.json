@@ -1609,6 +1609,12 @@
     }
   },
   "local-audit-log": {
+    "download": {
+      "csv": "Descargar CSV",
+      "json": "Descargar JSON",
+      "preparing": "Preparando…",
+      "truncated": "Solo se descargaron las primeras {{count}} filas coincidentes. Acote el filtro para obtener el resto."
+    },
     "error": {
       "failed": "No se pudieron cargar los registros de auditoría.",
       "forbidden": "Solo los administradores del espacio de trabajo pueden leer el registro de auditoría.",
